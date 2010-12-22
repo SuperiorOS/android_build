@@ -259,6 +259,10 @@ A/B OTA specific options
 
   --vabc_cow_version
       Specify the VABC cow version to be used
+
+  --backup <boolean>
+      Enable or disable the execution of backuptool.sh.
+      Disabled by default.
 """
 
 from __future__ import print_function
@@ -332,6 +336,7 @@ OPTIONS.security_patch_level = None
 OPTIONS.max_threads = None
 OPTIONS.vabc_cow_version = None
 
+OPTIONS.backuptool = False
 
 POSTINSTALL_CONFIG = 'META/postinstall_config.txt'
 DYNAMIC_PARTITION_INFO = 'META/dynamic_partitions_info.txt'
@@ -1282,6 +1287,8 @@ def main(argv):
       else:
         raise ValueError("Cannot parse value %r for option %r - only "
                          "integers are allowed." % (a, o))
+    elif o == "--backup":
+      OPTIONS.backuptool = True
     else:
       return False
     return True
@@ -1330,6 +1337,7 @@ def main(argv):
                                  "vabc_compression_param=",
                                  "security_patch_level=",
                                  "max_threads=",
+                                 "backup=",
                                  "vabc_cow_version=",
                              ], extra_option_handler=[option_handler, payload_signer.signer_options])
   common.InitLogging()
