@@ -241,7 +241,6 @@ OPTIONS.skip_postinstall = False
 OPTIONS.retrofit_dynamic_partitions = False
 OPTIONS.skip_compatibility_check = False
 OPTIONS.output_metadata_path = None
-
 OPTIONS.override_device = 'auto'
 OPTIONS.backuptool = False
 
@@ -249,7 +248,7 @@ METADATA_NAME = 'META-INF/com/android/metadata'
 POSTINSTALL_CONFIG = 'META/postinstall_config.txt'
 DYNAMIC_PARTITION_INFO = 'META/dynamic_partitions_info.txt'
 AB_PARTITIONS = 'META/ab_partitions.txt'
-UNZIP_PATTERN = ['IMAGES/*', 'META/*', 'RADIO/*', 'INSTALL/*']
+UNZIP_PATTERN = ['IMAGES/*', 'INSTALL/*', 'META/*', 'RADIO/*', 'SYSTEM/build.prop']
 RETROFIT_DAP_UNZIP_PATTERN = ['OTA/super_*.img', AB_PARTITIONS]
 
 
@@ -932,16 +931,11 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.SetPermissionsRecursive("/tmp/install/bin", 0, 0, 0755, 0755, None, None)
 
   if OPTIONS.backuptool:
-    if is_system_as_root:
-      script.fstab["/system"].mount_point = system_mount_point
     script.Mount("/system")
-    if is_system_as_root and common.system_as_system:
-      script.RunBackup("backup", "/system/system")
-    else:
-      script.RunBackup("backup", "/system")
-    script.Unmount(system_mount_point)
-    if is_system_as_root:
-      script.fstab["/system"].mount_point = "/"
+    script.Print("BackupTools: starting backup script")
+    script.RunBackup("backup")
+    script.Print("BackupTools: DONE! Now real installation will begin")
+    script.Unmount("/system")
 
   system_progress = 0.75
 
@@ -1025,16 +1019,11 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   if OPTIONS.backuptool:
     script.ShowProgress(0.02, 10)
-    if is_system_as_root:
-      script.fstab["/system"].mount_point = system_mount_point
     script.Mount("/system")
-    if is_system_as_root and common.system_as_system:
-      script.RunBackup("restore", "/system/system")
-    else:
-      script.RunBackup("restore", "/system")
-    script.Unmount(system_mount_point)
-    if is_system_as_root:
-      script.fstab["/system"].mount_point = "/"
+    script.Print("BackupTools: Restoring backup")
+    script.RunBackup("restore")
+    script.Print("BackupTools: DONE!")
+    script.Unmount("/system")
 
   script.ShowProgress(0.05, 5)
   script.WriteRawImage("/boot", "boot.img")
@@ -2092,6 +2081,11 @@ def WriteABOTAPackageWithBrilloScript(target_file, output_file,
                                additional_args=additional_args)
     secondary_payload.Sign(payload_signer)
     secondary_payload.WriteToZip(output_zip)
+
+  target_zip = zipfile.ZipFile(target_file, "r")
+  common.ZipWriteStr(output_zip, "system/build.prop",
+                     target_zip.read("SYSTEM/build.prop"))
+  common.ZipClose(target_zip)
 
   # If dm-verity is supported for the device, copy contents of care_map
   # into A/B OTA package.

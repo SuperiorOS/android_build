@@ -3530,6 +3530,9 @@ endif
   ifeq ($(TARGET_BUILD_PDK),true)
     build_ota_package := false
   endif
+  ifeq ($(TARGET_FORCE_OTA_PACKAGE),true)
+    build_ota_package := true
+  endif
 
   # set build_otatools_package, and allow opt-out below
   build_otatools_package := true
@@ -3845,7 +3848,7 @@ ifneq (,$(INSTALLED_RECOVERYIMAGE_TARGET)$(filter true,$(BOARD_USES_RECOVERY_AS_
 	    $(TARGET_RECOVERY_ROOT_OUT),$(zip_root)/$(PRIVATE_RECOVERY_OUT)/RAMDISK)
 	@# OTA install helpers
 	$(hide) $(call package_files-copy-root, \
-		$(PRODUCT_OUT)/install,$(zip_root)/INSTALL)
+	    $(PRODUCT_OUT)/install,$(zip_root)/INSTALL)
 ifdef INSTALLED_KERNEL_TARGET
 	$(hide) cp $(INSTALLED_KERNEL_TARGET) $(zip_root)/$(PRIVATE_RECOVERY_OUT)/kernel
 endif
@@ -4259,6 +4262,7 @@ PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$$PATH MKBOOTIMG=$(MK
    --block \
    --extracted_input_target_files $(patsubst %.zip,%,$(BUILT_TARGET_FILES_PACKAGE)) \
    -p $(HOST_OUT) \
+   --backup=$(backuptool) \
    $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
    $(2) \
    $(BUILT_TARGET_FILES_PACKAGE) $(1)
@@ -4293,7 +4297,7 @@ endif
 ifeq ($(WITH_GMS),true)
     $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := false
 else
-ifneq ($(CUSTOM_BUILD),)
+ifneq ($(SUPERIOR_BUILD),)
     $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := true
 else
     $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := false
