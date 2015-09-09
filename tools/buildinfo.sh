@@ -55,4 +55,8 @@ fi
 
 echo "ro.superior.device=$SUPERIOR_DEVICE"
 
+if [ -n "$DEVICE_MAINTAINERS" ] ; then
+  echo "ro.superior.maintainer=$DEVICE_MAINTAINERS"
+fi
+
 echo "# end build properties"
