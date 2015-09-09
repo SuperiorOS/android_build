@@ -59,6 +59,9 @@ echo "ro.build.fingerprint=$BUILD_FINGERPRINT"
 if [ -n "$BUILD_THUMBPRINT" ] ; then
   echo "ro.build.thumbprint=$BUILD_THUMBPRINT"
 fi
+if [ -n "$DEVICE_MAINTAINERS" ] ; then
+  echo "ro.superior.maintainer=$DEVICE_MAINTAINERS"
+fi
 echo "ro.build.characteristics=$TARGET_AAPT_CHARACTERISTICS"
 
 echo "ro.superior.device=$SUPERIOR_DEVICE"
