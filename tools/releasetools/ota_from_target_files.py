@@ -820,7 +820,23 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Comment("Stage 3/3")
 
   # Dump fingerprints
-  script.Print("Target: {}".format(target_info.fingerprint))
+  #script.Print("Target: {}".format(target_info.fingerprint))
+  #script.Print("Target: %s" % target_fp)
+
+  script.Print("")
+  script.Print("  || THANK YOU FOR FLASHING ||")
+  script.Print("")
+  script.Print("  /$$$$$$   /$$$$$$   /$$$$$$ ");
+  script.Print(" /$$__  $$ /$$__  $$ /$$__  $$");
+  script.Print("| $$  \__/| $$  \ $$| $$  \__/");
+  script.Print("|  $$$$$$ | $$  | $$|  $$$$$$ ");
+  script.Print(" \____  $$| $$  | $$ \____  $$");
+  script.Print(" /$$  \ $$| $$  | $$ /$$  \ $$");
+  script.Print("|  $$$$$$/|  $$$$$$/|  $$$$$$/");
+  script.Print(" \______/  \______/  \______/ ");
+  script.Print("")
+  script.Print("        ||| XCalibur |||      ")
+  script.Print("")
 
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
   device_specific.FullOTA_InstallBegin()
