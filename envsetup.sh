@@ -210,6 +210,13 @@ function check_product()
         echo "Couldn't locate the top of the tree.  Try setting TOP." >&2
         return
     fi
+    if (echo -n $1 | grep -q -e "^superior_") ; then
+        SUPERIOR_BUILD=$(echo -n $1 | sed -e 's/^superior_//g')
+    else
+        SUPERIOR_BUILD=
+    fi
+    export SUPERIOR_BUILD
+
         TARGET_PRODUCT=$1 \
         TARGET_RELEASE= \
         TARGET_BUILD_VARIANT= \
@@ -822,6 +829,8 @@ function lunch()
         return 1
     fi
 
+    check_product $product
+
     TARGET_PRODUCT=$product \
     TARGET_BUILD_VARIANT=$variant \
     TARGET_RELEASE=$release \
@@ -841,6 +850,8 @@ function lunch()
     export TARGET_BUILD_TYPE=release
 
     [[ -n "${ANDROID_QUIET_BUILD:-}" ]] || echo
+
+    fixup_common_out_dir
 
     set_stuff_for_environment
     [[ -n "${ANDROID_QUIET_BUILD:-}" ]] || printconfig
