@@ -215,6 +215,33 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.Print("Target: {}".format(target_info.fingerprint))
 
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
+  build_id = target_info.GetBuildProp("ro.superior.display.version")
+  build_day = target_info.GetBuildProp("ro.build.date")
+  security_patch = target_info.GetBuildProp("ro.build.version.security_patch")
+  device = target_info.GetBuildProp("ro.product.device")
+  android_version = target_info.GetBuildProp("ro.build.version.release")
+
+  script.Print("--------------------------------------------");
+  script.Print("   _____                       _            ");
+  script.Print("  / ___/__  ______  ___  _____(_)___  _____ ");
+  script.Print("  \__ \/ / / / __ \/ _ \/ ___/ / __ \/ ___/ ");
+  script.Print(" ___/ / /_/ / /_/ /  __/ /  / / /_/ / /     ");
+  script.Print("/____/\__,_/ .___/\___/_/  /_/\____/_/      ");
+  script.Print("          /_/                               ");
+  script.Print("              --- Fifteen ---               ");
+  script.Print("--------------------------------------------");
+  script.Print(" OS version       : %s"%(build_id));
+  script.Print("");
+  script.Print(" Android version  : %s"%(android_version));
+  script.Print("");
+  script.Print(" Security patch   : %s"%(security_patch));
+  script.Print("");
+  script.Print(" Build date       : %s"%(build_day));
+  script.Print("");
+  script.Print(" Device codename  : %s"%(device));
+  script.Print("");
+  script.Print("--------------------------------------------");
+
   device_specific.FullOTA_InstallBegin()
 
   CopyInstallTools(output_zip)
