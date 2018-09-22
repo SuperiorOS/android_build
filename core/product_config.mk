@@ -177,7 +177,7 @@ include $(BUILD_SYSTEM)/device.mk
 
 # A Custom build needs only the AOSP product makefiles.
 ifneq ($(CUSTOM_BUILD),)
-  all_product_configs := $(shell find device -path "*/$(CUSTOM_BUILD)/superior_$(CUSTOM_BUILD).mk")
+  all_product_configs := $(shell find device -path "*/*/superior_$(CUSTOM_BUILD).mk")
 else
   ifneq ($(strip $(TARGET_BUILD_APPS)),)
   # An unbundled app build needs only the core product makefiles.
