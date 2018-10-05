@@ -822,21 +822,15 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   # Dump fingerprints
   script.Print("Target: {}".format(target_info.fingerprint))
-
-
-  script.Print(" ")
-  script.Print("     ___                            _              ")
-  script.Print("  / ___/ __  __ ____   ___   _____ (_)____   _____ ")
-  script.Print("  \__ \ / / / // __ \ / _ \ / ___// // __ \ / ___/ ")
-  script.Print(" ___/ // /_/ // /_/ //  __// /   / // /_/ // /     ")
-  script.Print("/____/ \__,_// .___/ \___//_/   /_/ \____//_/      ")
-  script.Print("            /_/                                    ")
-  script.Print("              ____  _____                          ")
-  script.Print("             / __ \/ ___/                          ")
-  script.Print("            / / / /\__ \                           ")
-  script.Print("           / /_/ /___/ /                           ")
-  script.Print("           \____//____/                            ")
-  script.Print(" ")
+  script.Print("--------------------------------------------");
+  script.Print("   _____                       _            ");
+  script.Print("  / ___/__  ______  ___  _____(_)___  _____ ");
+  script.Print("  \__ \/ / / / __ \/ _ \/ ___/ / __ \/ ___/ ");
+  script.Print(" ___/ / /_/ / /_/ /  __/ /  / / /_/ / /     ");
+  script.Print("/____/\__,_/ .___/\___/_/  /_/\____/_/      ");
+  script.Print("          /_/                               ");
+  script.Print("            ---  Alpha ---                  ");
+  script.Print("--------------------------------------------");
   script.AppendExtra("sleep (2);")
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
   device_specific.FullOTA_InstallBegin()
@@ -862,12 +856,11 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     buildidn = target_info.GetBuildProp("ro.build.id")
     buildday = target_info.GetBuildProp("ro.build.date")
     securep = target_info.GetBuildProp("ro.build.version.security_patch")
-    density = target_info.GetBuildProp("ro.sf.lcd_density",False)
     device = target_info.GetBuildProp("ro.superior.device")
     androidver = target_info.GetBuildProp("ro.build.version.release")
     manufacturer = target_info.GetBuildProp("ro.product.manufacturer")
     sdkver = target_info.GetBuildProp("ro.build.version.sdk")
-    script.Print(" **************** Software *****************");
+    script.Print(" *******************************************");
     script.Print(" OS version: %s"%(buildid));
     script.Print("");
     script.Print(" Android version: %s"%(androidver));
@@ -876,17 +869,9 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print("");
     script.Print(" SDK version: %s"%(sdkver));
     script.Print("");
-    script.Print(" Root status: Disabled");
-    script.Print("");
-    script.Print(" Build ID: %s"%(buildidn));
-    script.Print("");
     script.Print(" Build date: %s"%(buildday));
-    script.Print(" **************** Hardware *****************");
+    script.Print("");
     script.Print(" Device codename: %s"%(device));
-    script.Print("");
-    script.Print(" Manufacturer: %s"%(manufacturer));
-    script.Print("");
-    script.Print(" LCD density: %s"%(density));
     script.Print("");
     script.Print(" *******************************************");
 
