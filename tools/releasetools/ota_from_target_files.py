@@ -829,7 +829,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.Print(" ___/ / /_/ / /_/ /  __/ /  / / /_/ / /     ");
   script.Print("/____/\__,_/ .___/\___/_/  /_/\____/_/      ");
   script.Print("          /_/                               ");
-  script.Print("            ---  Alpha ---                  ");
+  script.Print("           ---  Lightining ---              ");
   script.Print("--------------------------------------------");
   script.AppendExtra("sleep (2);")
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
@@ -860,7 +860,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     androidver = target_info.GetBuildProp("ro.build.version.release")
     manufacturer = target_info.GetBuildProp("ro.product.manufacturer")
     sdkver = target_info.GetBuildProp("ro.build.version.sdk")
-    script.Print(" *******************************************");
     script.Print(" OS version: %s"%(buildid));
     script.Print("");
     script.Print(" Android version: %s"%(androidver));
@@ -873,7 +872,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print("");
     script.Print(" Device codename: %s"%(device));
     script.Print("");
-    script.Print(" *******************************************");
+    script.Print("--------------------------------------------");
 
   if OPTIONS.wipe_user_data:
     system_progress -= 0.1
