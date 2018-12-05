@@ -829,7 +829,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.Print(" ___/ / /_/ / /_/ /  __/ /  / / /_/ / /     ");
   script.Print("/____/\__,_/ .___/\___/_/  /_/\____/_/      ");
   script.Print("          /_/                               ");
-  script.Print("              --- Meteor ---                ");
+  script.Print("            --- Destructor ---              ");
   script.Print("--------------------------------------------");
   script.AppendExtra("sleep (2);")
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
