@@ -854,10 +854,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     if is_system_as_root:
       script.fstab["/system"].mount_point = "/"
 
-  script.Mount("/system")
-  script.RunCleanCache()
-  script.Unmount("/system")
-
   system_progress = 0.75
 
   if target_info.GetBuildProp("ro.superior.display.version") is not None:
@@ -919,10 +915,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   common.ZipWriteStr(output_zip, "boot.img", boot_img.data)
 
   device_specific.FullOTA_PostValidate()
-
-  script.Mount("/system")
-  script.RunCleanCache()
-  script.Unmount("/system")
 
   if OPTIONS.backuptool:
     script.ShowProgress(0.02, 10)
