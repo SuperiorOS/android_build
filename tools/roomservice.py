@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # Copyright (C) 2012-2013, The CyanogenMod Project
 # Copyright (C) 2012-2015, SlimRoms Project
-# Copyright (C) 2016-2018, AOSiP
-# Copyright (C) 2018-2019, Superior OS Project
+# Copyright (C) 2016-2017, AOSiP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
+
 import base64
 import json
 import netrc
@@ -24,9 +25,20 @@ import sys
 
 from xml.etree import ElementTree
 
-import urllib.error
-import urllib.parse
-import urllib.request
+try:
+    # For python3
+    import urllib.error
+    import urllib.parse
+    import urllib.request
+except ImportError:
+    # For python2
+    import imp
+    import urllib2
+    import urlparse
+    urllib = imp.new_module('urllib')
+    urllib.error = urllib2
+    urllib.parse = urlparse
+    urllib.request = urllib2
 
 DEBUG = False
 default_manifest = ".repo/manifest.xml"
@@ -110,6 +122,21 @@ def get_remote(manifest=None, remote_name=None):
 
 def get_revision(manifest=None, p="build"):
     return custom_default_revision
+    m = manifest or load_manifest(default_manifest)
+    project = None
+    for proj in m.findall('project'):
+        if proj.get('path').strip('/') == p:
+            project = proj
+            break
+    revision = project.get('revision')
+    if revision:
+        return revision.replace('refs/heads/', '').replace('refs/tags/', '')
+    remote = get_remote(manifest=m, remote_name=project.get('remote'))
+    revision = remote.get('revision')
+    if not revision:
+        return custom_default_revision
+    return revision.replace('refs/heads/', '').replace('refs/tags/', '')
+
 
 def get_from_manifest(device_name):
     if os.path.exists(custom_local_manifest):
@@ -122,9 +149,11 @@ def get_from_manifest(device_name):
 
 
 def is_in_manifest(project_path):
-    for local_path in load_manifest(custom_local_manifest).findall("project"):
-        if local_path.get("path") == project_path:
-            return True
+    for man in (custom_local_manifest, default_manifest):
+        man = load_manifest(man)
+        for local_path in man.findall("project"):
+            if local_path.get("path") == project_path:
+                return True
     return False
 
 
@@ -132,31 +161,21 @@ def add_to_manifest(repos, fallback_branch=None):
     lm = load_manifest(custom_local_manifest)
 
     for repo in repos:
-
-        if 'repository' not in repo: # Remove repo if the name isn't set
-            print('Error adding %s', repo)
-            del repos[repo]
-            continue
         repo_name = repo['repository']
-        if 'target_path' in repo:
-            repo_path = repo['target_path']
-        else: # If path isn't set, its the same as name
-            repo_path = repo_name.split('/')[-1]
-
-        if 'branch' in repo:
-            repo_branch=repo['branch']
-        else:
-            repo_branch=custom_default_revision
-
-        if 'remote' in repo:
-            repo_remote=repo['remote']
-        elif "/" not in repo_name:
-            repo_remote=org_manifest
-        elif "/" in repo_name:
-            repo_remote="github"
+        repo_path = repo['target_path']
+	if 'branch' in repo:
+	    repo_branch=repo['branch']
+	else:
+	    repo_branch=custom_default_revision
+	if 'remote' in repo:
+	    repo_remote=repo['remote']
+	elif "/" not in repo_name:
+	    repo_remote=org_manifest
+	elif "/" in repo_name:
+	    repo_remote="github"
 
         if is_in_manifest(repo_path):
-            print('%s already exists in the manifest', repo_path)
+            print('already exists: %s' % repo_path)
             continue
 
         print('Adding dependency:\nRepository: %s\nBranch: %s\nRemote: %s\nPath: %s\n' % (repo_name, repo_branch,repo_remote, repo_path))
@@ -165,7 +184,7 @@ def add_to_manifest(repos, fallback_branch=None):
             "project",
             attrib={"path": repo_path,
                     "remote": repo_remote,
-                    "name":  repo_name}
+                    "name": "%s" % repo_name}
         )
 
         if repo_branch is not None:
@@ -176,10 +195,9 @@ def add_to_manifest(repos, fallback_branch=None):
             project.set('revision', fallback_branch)
         else:
             print("Using default branch for %s" % repo_name)
-        if 'clone-depth' in repo:
-            print("Setting clone-depth to %s for %s" % (repo['clone-depth'], repo_name))
-            project.set('clone-depth', repo['clone-depth'])
-
+	if 'clone-depth' in repo:
+	    print("Setting clone-depth to %s for %s" % (repo['clone-depth'], repo_name))
+	    project.set('clone-depth', repo['clone-depth'])
         lm.append(project)
 
     indent(lm)
@@ -207,7 +225,7 @@ def fetch_dependencies(repo_path, fallback_branch=None):
             dependencies = json.load(dep_f)
     else:
         dependencies = {}
-        debug('Dependencies file not found, bailing out.')
+        print('%s has no additional dependencies.' % repo_path)
 
     fetch_list = []
     syncable_repos = []
@@ -321,13 +339,13 @@ def main():
     for repository in repositories:
         repo_name = repository['name']
 
-        if not (repo_name.startswith("android_device_") and
+        if not (repo_name.startswith("device_") and
                 repo_name.endswith("_" + device)):
             continue
         print("Found repository: %s" % repository['name'])
 
         fallback_branch = detect_revision(repository)
-        manufacturer = repo_name.replace("android_device_", "").replace("_" + device, "")
+        manufacturer = repo_name[7:-(len(device)+1)]
         repo_path = "device/%s/%s" % (manufacturer, device)
         adding = [{'repository': repo_name, 'target_path': repo_path}]
 
