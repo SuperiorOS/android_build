@@ -906,14 +906,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   # Dump fingerprints
   script.Print("Target: {}".format(target_info.fingerprint))
 
-  is_system_as_root = target_info.get("system_root_image") == "true"
-  if is_system_as_root and not common.system_as_system:
-    system_mount_point = "/system_root"
-  else:
-    system_mount_point = "/system"
-
-  script.AppendExtra("ifelse(is_mounted(\"{0}\"), unmount(\"{0}\"));".format(system_mount_point))
-
   script.Print("--------------------------------------------");
   script.Print("   _____                       _            ");
   script.Print("  / ___/__  ______  ___  _____(_)___  _____ ");
@@ -923,19 +915,24 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.Print("          /_/                               ");
   script.Print("           ---  Phoenix ---                 ");
   script.Print("--------------------------------------------");
+
   device_specific.FullOTA_InstallBegin()
+
+  if target_info.get("system_root_image") == "true":
+    sys_mount = "/"
+  else:
+    sys_mount = "/system"
 
   CopyInstallTools(output_zip)
   script.UnpackPackageDir("install", "/tmp/install")
   script.SetPermissionsRecursive("/tmp/install", 0, 0, 0755, 0644, None, None)
   script.SetPermissionsRecursive("/tmp/install/bin", 0, 0, 0755, 0755, None, None)
+  script.MountSys("check", sys_mount)
 
   if OPTIONS.backuptool:
-    script.Mount("/system")
     script.Print("BackupTools: starting backup script")
-    script.RunBackup("backup", "/system/system")
+    script.MountSys("backup", sys_mount)
     script.Print("BackupTools: DONE! Now real installation will begin")
-    script.Unmount("/system")
 
   system_progress = 0.75
 
@@ -1019,11 +1016,9 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   if OPTIONS.backuptool:
     script.ShowProgress(0.02, 10)
-    script.Mount("/system")
     script.Print("BackupTools: Restoring backup")
-    script.RunBackup("restore", "/system/system")
+    script.MountSys("restore", sys_mount)
     script.Print("BackupTools: DONE!")
-    script.Unmount("/system")
 
   script.ShowProgress(0.05, 5)
   script.WriteRawImage("/boot", "boot.img")
