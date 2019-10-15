@@ -1871,9 +1871,6 @@ $(RECOVERY_INSTALL_OTA_KEYS): $(SOONG_ZIP) $(OTA_PUBLIC_KEYS) $(extra_keys)
 RECOVERYIMAGE_ID_FILE := $(PRODUCT_OUT)/recovery.id
 
 define build-recoveryramdisk
-  $(hide) ./vendor/superior/tools/changelog.sh
-  $(hide) mv $(PRODUCT_OUT)/Changelog.txt $(PRODUCT_OUT)/SuperiorOS-$(SUPERIOR_MOD_VERSION)-$(TARGET_DEVICE)-$(SUPERIOR_BUILD_TYPE)-$(CUSTOM_BUILD_DATE)-Changelog.txt
-  @echo ----- Making recovery image ------
   $(hide) mkdir -p $(TARGET_RECOVERY_OUT)
   $(hide) mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/sdcard $(TARGET_RECOVERY_ROOT_OUT)/tmp
   # Copying baseline ramdisk...
@@ -2300,8 +2297,6 @@ endif
 
 # $(1): output file
 define build-systemimage-target
-  $(hide) ./vendor/superior/tools/changelog.sh
-  $(hide) mv $(PRODUCT_OUT)/Changelog.txt $(PRODUCT_OUT)/SuperiorOS-$(SUPERIOR_MOD_VERSION)-$(SUPERIOR_BUILD_TYPE)-Changelog.txt
   @echo "Target system fs image: $(1)"
   $(call create-system-vendor-symlink)
   $(call create-system-product-symlink)
@@ -4266,7 +4261,7 @@ endif
 ifeq ($(WITH_GMS),true)
     $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := false
 else
-ifneq ($(SUPERIOR_BUILD),)
+ifneq ($(CUSTOM_BUILD),)
     $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := true
 else
     $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := false
