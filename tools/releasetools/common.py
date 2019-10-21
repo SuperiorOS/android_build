@@ -2178,7 +2178,8 @@ class BlockDifference(object):
     call = ('block_image_update({device}, '
             'package_extract_file("{partition}.transfer.list"), '
             '"{new_data_name}", "{partition}.patch.dat") ||\n'
-            '  abort("E{code}: Failed to update {partition} image.");'.format(
+            '  abort("E{code}: Failed to update {partition} image.");\n'
+            'delete_recursive("/data/system/package_cache");'.format(
                 device=self.device, partition=self.partition,
                 new_data_name=new_data_name, code=code))
     script.AppendExtra(script.WordWrap(call))
