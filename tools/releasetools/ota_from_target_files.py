@@ -957,7 +957,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     androidver = target_info.GetBuildProp("ro.build.version.release")
     manifacturer = target_info.GetBuildProp("ro.product.manufacturer")
     sdkver = target_info.GetBuildProp("ro.build.version.sdk")
-    script.Print(" *******************************************");
     script.Print(" OS version: %s"%(buildid));
     script.Print("");
     script.Print(" Android version: %s"%(androidver));
@@ -970,7 +969,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print("");
     script.Print(" Device codename: %s"%(device));
     script.Print("");
-    script.Print(" *******************************************");
+    script.Print("--------------------------------------------");
 
   if OPTIONS.wipe_user_data:
     system_progress -= 0.1
