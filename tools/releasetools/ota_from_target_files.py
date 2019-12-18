@@ -821,16 +821,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   # Dump fingerprints
   script.Print("Target: {}".format(target_info.fingerprint))
-  script.Print("--------------------------------------------");
-  script.Print("   _____                       _            ");
-  script.Print("  / ___/__  ______  ___  _____(_)___  _____ ");
-  script.Print("  \__ \/ / / / __ \/ _ \/ ___/ / __ \/ ___/ ");
-  script.Print(" ___/ / /_/ / /_/ /  __/ /  / / /_/ / /     ");
-  script.Print("/____/\__,_/ .___/\___/_/  /_/\____/_/      ");
-  script.Print("          /_/                               ");
-  script.Print("            ---  Alpha ---                  ");
-  script.Print("--------------------------------------------");
-  script.AppendExtra("sleep (2);")
   device_specific.FullOTA_InstallBegin()
 
   CopyInstallTools(output_zip)
@@ -859,6 +849,17 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     androidver = target_info.GetBuildProp("ro.build.version.release")
     manifacturer = target_info.GetBuildProp("ro.product.manufacturer")
     sdkver = target_info.GetBuildProp("ro.build.version.sdk")
+
+    script.Print("--------------------------------------------");
+    script.Print("   _____                       _            ");
+    script.Print("  / ___/__  ______  ___  _____(_)___  _____ ");
+    script.Print("  \__ \/ / / / __ \/ _ \/ ___/ / __ \/ ___/ ");
+    script.Print(" ___/ / /_/ / /_/ /  __/ /  / / /_/ / /     ");
+    script.Print("/____/\__,_/ .___/\___/_/  /_/\____/_/      ");
+    script.Print("          /_/                               ");
+    script.Print("             --- Alpha ---                  ");
+    script.Print("--------------------------------------------");
+
     script.Print(" OS version: %s"%(buildid));
     script.Print("");
     script.Print(" Android version: %s"%(androidver));
