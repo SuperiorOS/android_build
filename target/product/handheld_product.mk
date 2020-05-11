@@ -26,6 +26,7 @@ PRODUCT_PACKAGES += \
     Calendar \
     DeskClock \
     Gallery2 \
+    Launcher3QuickStep \
     OneTimeInitializer \
     Provision \
     Settings \
