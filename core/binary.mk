@@ -54,6 +54,13 @@ ifneq (,$(findstring $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr,$(LOCAL_ADDITION
   LOCAL_ADDITIONAL_DEPENDENCIES := $(patsubst $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr,,$(LOCAL_ADDITIONAL_DEPENDENCIES))
 endif
 
+# Replace generated_kernel_headers with device_kernel_headers when not building inline
+ifneq ($(INLINE_KERNEL_BUILDING),true)
+  ifneq (,$(findstring generated_kernel_headers,$(LOCAL_HEADER_LIBRARIES)))
+    LOCAL_HEADER_LIBRARIES := $(patsubst generated_kernel_headers,device_kernel_headers,$(LOCAL_HEADER_LIBRARIES))
+  endif
+endif
+
 # The following LOCAL_ variables will be modified in this file.
 # Because the same LOCAL_ variables may be used to define modules for both 1st arch and 2nd arch,
 # we can't modify them in place.
