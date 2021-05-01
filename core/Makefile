@@ -6183,13 +6183,13 @@ $(call declare-container-license-deps,$(INTERNAL_OTA_PACKAGE_TARGET),$(BUILT_TAR
 
 TARGET_PACKAGE := $(PRODUCT_OUT)/$(SUPERIOR_VERSION).zip
 
-MD5 := prebuilts/build-tools/path/$(HOST_OS)-x86/md5sum
+SHA256 := prebuilts/build-tools/path/$(HOST_PREBUILT_TAG)/sha256sum
 
 .PHONY: otapackage bacon
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 bacon: otapackage
 	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(TARGET_PACKAGE)
-	$(hide) $(MD5) $(TARGET_PACKAGE) > $(TARGET_PACKAGE).md5sum
+	$(hide) $(SHA256) $(TARGET_PACKAGE) > $(TARGET_PACKAGE).sha256sum
 	echo -e ""
 	echo -e ${CL_RED}"███████╗██╗   ██╗██████╗ ███████╗██████╗ ██╗ ██████╗ ██████╗      ██████╗ ███████╗ "${CL_RED}
 	echo -e ${CL_RED}"██╔════╝██║   ██║██╔══██╗██╔════╝██╔══██╗██║██╔═══██╗██╔══██╗    ██╔═══██╗██╔════╝ "${CL_RED}
@@ -6200,7 +6200,7 @@ bacon: otapackage
 	echo -e ""
 	echo -e ${CL_BLD}${CL_RED}"===============================-Package complete-==============================="${CL_RED}
 	echo -e ${CL_BLD}${CL_GRN}"Zip: "${CL_RED} $(TARGET_PACKAGE)${CL_RST}
-	echo -e ${CL_BLD}${CL_GRN}"MD5: "${CL_RED}" `cat $(TARGET_PACKAGE).md5sum | awk '{print $$1}' `"${CL_RST}
+	echo -e ${CL_BLD}${CL_GRN}"SHA256: "${CL_RED}" `cat $(TARGET_PACKAGE).sha256sum | awk '{print $$1}' `"${CL_RST}
 	echo -e ${CL_BLD}${CL_GRN}"Size:"${CL_RED}" `du -sh $(TARGET_PACKAGE) | awk '{print $$1}' `"${CL_RST}
 	echo -e ${CL_BLD}${CL_GRN}"TimeStamp:"${CL_RED}" `cat $(PRODUCT_OUT)/system/build.prop | grep ro.build.date.utc | cut -d'=' -f2 | awk '{print $$1}' `"${CL_RST}
 	echo -e ${CL_BLD}${CL_GRN}"Integer Value:"${CL_RED}" `wc -c $(TARGET_PACKAGE) | awk '{print $$1}' `"${CL_RST}
