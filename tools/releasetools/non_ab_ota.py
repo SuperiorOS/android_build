@@ -227,7 +227,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.Print(" ___/ / /_/ / /_/ /  __/ /  / / /_/ / /     ");
   script.Print("/____/\__,_/ .___/\___/_/  /_/\____/_/      ");
   script.Print("          /_/                               ");
-  script.Print("               --- Alpha ---                ");
   script.Print("--------------------------------------------");
   script.Print(" OS version       : %s"%(build_id));
   script.Print("");
