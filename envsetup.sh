@@ -508,8 +508,13 @@ function lunch()
     SUPERIOR_DEVICE=$SUPERIOR_BUILD
     export SUPERIOR_DEVICE
 
+    local depsOnly=""
+    if [[ $(find ./device -type d -name "$SUPERIOR_DEVICE" -print -quit) != "" ]]; then
+        depsOnly="true"
+    fi
+
     cd $T > /dev/null
-    vendor/superior/build/tools/roomservice.py $product
+    vendor/superior/build/tools/roomservice.py $product $depsOnly
     cd - > /dev/null
 
     _lunch_meat $product $release $variant
